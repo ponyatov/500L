@@ -42,6 +42,9 @@ def test_rw_field():
     obj.b = 5
     assert obj.a == 1
     assert obj.b == 5
+    obj.a = 2
+    assert obj.a == 2
+    assert obj.b == 5
     # SOM
     A = Class(name='A', base=OBJECT, meta=TYPE)
     assert '%s' % A == 'Class:A'
@@ -49,3 +52,10 @@ def test_rw_field():
     assert '%s' % obj == 'Instance:Class:A'
     obj.Wattr('a', 1)
     assert obj.Rattr('a') == 1
+    obj.Wattr('b',5)
+    assert obj.Rattr('a') == 1
+    assert obj.Rattr('b') == 5
+    obj.Wattr('a', 2)
+    assert obj.Rattr('a') == 2
+    assert obj.Rattr('b') == 5
+    
