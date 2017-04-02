@@ -1,1 +1,1 @@
-@gvim -p log.log py.py parse.py Makefile 
+@gvim -p log.log 500L.py parse.py Makefile 

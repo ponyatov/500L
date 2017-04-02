@@ -1,2 +1,2 @@
-log.log: parse.py py.py
-	python parse.py < py.py > log.log && tail $(TAIL) $@
+log.log: 500L.py parse.py
+	python parse.py < $< > $@ && tail $(TAIL) $@
