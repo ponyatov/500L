@@ -104,3 +104,22 @@ def test_isinstance():
     assert b.isinstance(A)
     assert b.isinstance(OBJECT)
     assert not b.isinstance(TYPE)
+
+def test_call_simple():
+    ' call in simple single inheritance model '
+    # python
+    class A(object):
+        def f(self): return self.x + 1
+    obj = A()
+    obj.x = 1
+    assert obj.f() == 2
+    class B(A): pass
+    obj = B()
+    obj.x = 1
+    assert obj.f() == 2
+    # object model
+    def f_A(self): return self.Rattr('x') + 1 # dummy function in python
+    A = Class('A',base=OBJECT,meta=TYPE,fields={'f':f_A})
+    obj = Instance(A)
+    obj.Wattr('x',1)
+    assert obj.call('f') == 2
