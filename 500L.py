@@ -15,6 +15,13 @@ class Base(object):
     MISSING = object()
     def Rdict(self, fldname):
         return self._fields.get(fldname, self.MISSING)
+    def isinstance(self,cls):
+        return self.cls.issubclass(cls)
+    def issubclass(self,cls):
+        return cls in self.method_resolution_order()
+    def method_resolution_order(self):
+        if self.base: return [self] + self.base.method_resolution_order()
+        else: return [self]
 
 class Class(Base):
     ' A User-defined class '
@@ -38,7 +45,8 @@ TYPE.cls = TYPE
 # OBJECT is an instance of TYPE
 OBJECT.cls = TYPE
 
-def test_rw_field():
+def test_rw_instance_fields():
+    ' test object (instance) fields r/w '
     # Python
     class A(object): pass
     obj = A()
@@ -65,6 +73,7 @@ def test_rw_field():
     assert obj.Rattr('b') == 5
     
 def test_rw_class_fields():
+    ' test class (static) fields r/w'
     # Python
     class A(object): pass
     A.a = 1
@@ -76,3 +85,22 @@ def test_rw_class_fields():
     assert A.Rattr('a') == 1
     A.Wattr('a', 6)
     assert A.Rattr('a') == 6
+
+def test_isinstance():
+    ' test instance checking /with inheritance/ '
+    # python
+    class A(object): pass
+    class B(A): pass
+    b = B()
+    assert isinstance(b,B)
+    assert isinstance(b,A)
+    assert isinstance(b,object)
+    assert not isinstance(b,type)
+    # object model
+    A = Class('A',base=OBJECT,meta=TYPE)
+    B = Class('B',base=A,meta=TYPE)
+    b = Instance(B)
+    assert b.isinstance(B)
+    assert b.isinstance(A)
+    assert b.isinstance(OBJECT)
+    assert not b.isinstance(TYPE)
