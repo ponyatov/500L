@@ -6,10 +6,15 @@ class Base(object):
         self.cls = cls ; self._fields = fields
     def __repr__(self):
         return '%s:%s' % (self.__class__.__name__, self.name)
-    def wattr(self, fldname, value):
-        self.wdict(fldname, value)
-    def wdict(self, fldname, value):
+    def Wattr(self, fldname, value):
+        self.Wdict(fldname, value)
+    def Rattr(self, fldname):
+        return self.Rdict(fldname)        
+    def Wdict(self, fldname, value):
         self._fields[fldname] = value
+    MISSING = object()
+    def Rdict(self, fldname):
+        return self._fields.get(fldname, self.MISSING)
 
 class Class(Base):
     ' A User-defined class '
@@ -42,4 +47,5 @@ def test_rw_field():
     assert '%s' % A == 'Class:A'
     obj = Instance(A)
     assert '%s' % obj == 'Instance:Class:A'
-    obj.wattr('a', 1)
+    obj.Wattr('a', 1)
+    assert obj.Rattr('a') == 1
